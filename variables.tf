@@ -1,8 +1,10 @@
 variable "region" {
-  type    = string
-  default = "ap-northeast-2"
+  type = string
 }
 variable "service" {
-  type    = string
-  default = "zipzoong"
+  type = string
+}
+
+variable "admin_role_arn" {
+  type = string
 }
