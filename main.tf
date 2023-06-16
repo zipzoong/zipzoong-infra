@@ -5,6 +5,12 @@ terraform {
       version = "5.3.0"
     }
   }
+  backend "remote" {
+    organization = "zipzoong"
+    workspaces {
+      name = "zipzoong"
+    }
+  }
 }
 
 provider "aws" {
