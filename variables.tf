@@ -5,6 +5,6 @@ variable "service" {
   type = string
 }
 
-variable "admin_role_arn" {
+variable "assume_role_arn" {
   type = string
 }
