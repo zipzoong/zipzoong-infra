@@ -25,18 +25,6 @@ provider "aws" {
     session_name = "terraform"
   }
 }
-/**
-module "vpc" {
-  source  = "./resources/vpc"
-  region  = local.region
-  project = local.service
-}
-*/
-module "ecr_backend_main" {
-  source  = "./resources/ecr"
-  name    = "${local.service}_backend_main"
-  kms_key = "${local.service}_production_kms"
-}
 
 module "s3_public" {
   source  = "./resources/s3"
