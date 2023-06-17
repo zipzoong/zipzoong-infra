@@ -43,7 +43,7 @@ module "s3_public" {
   service = local.service
   bucket  = "public"
 }
-/**
+
 module "s3_private" {
   source  = "./resources/s3"
   service = local.service
@@ -55,4 +55,3 @@ module "s3_internal" {
   service = local.service
   bucket  = "internal"
 }
-*/

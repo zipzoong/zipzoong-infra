@@ -1,3 +1,7 @@
+locals {
+  public_cidr = "0.0.0.0/0"
+}
+
 resource "aws_vpc" "this" {
   tags = {
     Name = "${var.project}-vpc"
@@ -20,7 +24,7 @@ resource "aws_default_network_acl" "default" {
     protocol   = "all"
     rule_no    = 100
     action     = "allow"
-    cidr_block = var.public_cidr
+    cidr_block = local.public_cidr
   }
 
   egress {
@@ -29,7 +33,7 @@ resource "aws_default_network_acl" "default" {
     protocol   = "all"
     rule_no    = 100
     action     = "allow"
-    cidr_block = var.public_cidr
+    cidr_block = local.public_cidr
   }
 }
 
@@ -92,7 +96,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
   route {
-    cidr_block = var.public_cidr
+    cidr_block = local.public_cidr
     gateway_id = aws_internet_gateway.igw.id
   }
 
@@ -106,7 +110,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
 
   route {
-    cidr_block = var.public_cidr
+    cidr_block = local.public_cidr
     gateway_id = aws_nat_gateway.this.id
   }
 }
