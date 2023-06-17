@@ -13,22 +13,46 @@ terraform {
   }
 }
 
+locals {
+  service = "zipzoong"
+  region  = "ap-northeast-2"
+}
+
 provider "aws" {
-  region = var.region
+  region = local.region
   assume_role {
     role_arn     = var.assume_role_arn
     session_name = "terraform"
   }
 }
-
+/**
 module "vpc" {
   source  = "./resources/vpc"
-  region  = var.region
-  project = var.service
+  region  = local.region
+  project = local.service
 }
-
+*/
 module "ecr_backend_main" {
   source  = "./resources/ecr"
-  name    = "${var.service}_backend_main"
-  kms_key = "${var.service}_production_kms"
+  name    = "${local.service}_backend_main"
+  kms_key = "${local.service}_production_kms"
 }
+
+module "s3_public" {
+  source  = "./resources/s3"
+  service = local.service
+  bucket  = "public"
+}
+/**
+module "s3_private" {
+  source  = "./resources/s3"
+  service = local.service
+  bucket  = "private"
+}
+
+module "s3_internal" {
+  source  = "./resources/s3"
+  service = local.service
+  bucket  = "internal"
+}
+*/
