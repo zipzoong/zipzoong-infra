@@ -16,21 +16,21 @@ resource "aws_security_group" "allow_http" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "all"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 }
 
@@ -46,14 +46,14 @@ resource "aws_security_group" "allow_ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "all"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 }
 
@@ -69,13 +69,13 @@ resource "aws_security_group" "allow_4000" {
     from_port   = 4000
     to_port     = 4000
     protocol    = "tcp"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "all"
-    cidr_blocks = [var.public_cidr]
+    cidr_blocks = [local.public_cidr]
   }
 }
