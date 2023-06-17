@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "this" {
   tags = {
-    Name = "${var.service}-${var.bucket}"
+    Name = "${var.service}-s3-${var.bucket}"
   }
 
   bucket              = "${var.service}-${var.bucket}"
@@ -9,24 +9,10 @@ resource "aws_s3_bucket" "this" {
 
 }
 
-
-resource "aws_s3_bucket_ownership_controls" "this" {
-  bucket = aws_s3_bucket.this.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
-resource "aws_s3_bucket_acl" "this" {
-  depends_on = [aws_s3_bucket_ownership_controls.this]
-  bucket     = aws_s3_bucket.this.id
-  acl        = "private"
-}
-
 resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
   versioning_configuration {
-    status = "Enabled"
+    status = "Disabled"
   }
 }
 
