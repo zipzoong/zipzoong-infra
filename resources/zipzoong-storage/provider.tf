@@ -22,7 +22,7 @@ provider "aws" {
   region = local.region
   assume_role {
     role_arn     = var.assume_role_arn
-    session_name = "terraform-s3"
+    session_name = "terraform-storage"
   }
 }
 
