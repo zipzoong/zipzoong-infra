@@ -3,24 +3,7 @@ module "s3_public" {
   service       = local.service
   name          = "public"
   attach_policy = true
-  policy        = <<EOT
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::zipzoong-public/*"
-        },{
-            "Effect": "Allow",
-            "Principal": [${data.aws_iam_role.backend_main.arn}],
-            "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::zipzoong-public/*"
-        }
-    ]
-  }
-  EOT
+  policy        = data.aws_iam_policy_document.public_policy.json
 }
 
 module "s3_private" {
