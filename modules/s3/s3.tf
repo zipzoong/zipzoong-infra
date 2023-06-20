@@ -28,7 +28,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
   bucket                  = aws_s3_bucket.this.id
   block_public_acls       = true
   ignore_public_acls      = true
-  block_public_policy     = contains(flatten([for stmts in var.policy_statements : stmts.actions]), "s3:PutObject")
+  block_public_policy     = !contains(flatten([for stmts in var.policy_statements : stmts.actions]), "s3:PutObject")
   restrict_public_buckets = !var.attach_policy
 
   depends_on = [aws_s3_bucket.this]
