@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "this" {
   tags = {
-    Name = "${var.service}-s3-${var.bucket}"
+    Name = "${var.service}-s3-${var.name}"
   }
 
-  bucket              = "${var.service}-${var.bucket}"
+  bucket              = "${var.service}-${var.name}"
   force_destroy       = false
   object_lock_enabled = var.read-only
 }
@@ -25,28 +25,25 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   }
 }
 
-/**
-resource "aws_s3_bucket_ownership_controls" "this" {
-  bucket = aws_s3_bucket.this.id
-  rule {
-object_ownership = "Bucket"
-  }
-}
-*/
-
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket                  = aws_s3_bucket.this.id
-  block_public_acls       = var.public_access_block.block_public_acls
-  block_public_policy     = var.public_access_block.block_public_policy
-  ignore_public_acls      = var.public_access_block.ignore_public_acls
-  restrict_public_buckets = var.public_access_block.restrict_public_buckets
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = !var.attach_policy
+
+  depends_on = [aws_s3_bucket.this]
 }
 
-resource "aws_s3_bucket_acl" "this" {
-  depends_on = [
-    aws_s3_bucket_public_access_block.this
-  ]
+resource "aws_s3_bucket_policy" "this" {
+  count = var.attach_policy ? 1 : 0
+
+  # Chain resources (s3_bucket -> s3_bucket_public_access_block -> s3_bucket_policy )
+  # to prevent "A conflicting conditional operation is currently in progress against this resource."
+  # Ref: https://github.com/hashicorp/terraform-provider-aws/issues/7628
 
   bucket = aws_s3_bucket.this.id
-  acl    = var.acl
+  policy = var.policy
+
+  depends_on = [aws_s3_bucket_public_access_block.this]
 }

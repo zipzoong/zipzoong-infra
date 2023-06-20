@@ -2,22 +2,13 @@ variable "service" {
   type = string
 }
 
-variable "bucket" {
+variable "name" {
   type = string
 }
 
 variable "read-only" {
   type    = bool
   default = false
-}
-
-variable "acl" {
-  type = string
-  validation {
-    condition     = var.acl == "private" || var.acl == "public-read" || var.acl == "public-read-write" || var.acl == "aws-exec-read" || var.acl == "authenticated-read" || var.acl == "log-delivery-write"
-    error_message = "acl should be one of 'private' | 'public-read' | 'public-read-write' | 'aws-exec-read' | 'authenticated-read' | 'log-delivery-write'"
-  }
-  default = "private"
 }
 
 variable "version_status" {
@@ -29,17 +20,18 @@ variable "version_status" {
   default = "Disabled"
 }
 
-variable "public_access_block" {
-  type = object({
-    block_public_acls       = bool
-    block_public_policy     = bool
-    ignore_public_acls      = bool
-    restrict_public_buckets = bool
-  })
-  default = {
-    block_public_acls       = true
-    block_public_policy     = true
-    ignore_public_acls      = true
-    restrict_public_buckets = true
+variable "attach_policy" {
+  description = "(Optional) To apply a policy, you need to set 'attach_policy' to true. default is false"
+  type        = bool
+  default     = false
+}
+
+variable "policy" {
+  description = "(Optional) A valid bucket policy JSON document. Note that if the policy document is not specific enough (but still valid), Terraform may view the policy as constantly changing in a terraform plan. In this case, please make sure you use the verbose/specific version of the policy. For more information about building AWS IAM policy documents with Terraform, see the AWS IAM Policy Document Guide."
+  type        = string
+  validation {
+    condition     = (var.policy != null && var.attach_policy) || var.policy == null
+    error_message = "To apply a policy, you need to set 'attach_policy' to true."
   }
+  default = null
 }
