@@ -3,7 +3,6 @@ data "aws_iam_policy_document" "this" {
   version = "2012-10-17"
   dynamic "statement" {
     for_each = var.policy_statements
-
     content {
       effect    = policy_statement.value.allow ? "Allow" : "Deny"
       actions   = policy_statement.value.actions
