@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "public_policy" {
     effect  = "Allow"
     actions = ["s3:GetObject"]
     principals {
-      type        = "AWS"
+      type        = "*"
       identifiers = ["*"]
     }
   }
