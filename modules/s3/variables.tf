@@ -32,7 +32,6 @@ variable "policy_statements" {
     resource_paths = list(string)
     principals     = map(set(string))
   }))
-
   description = "principals key is one of AWS, Service, Federated, CanonicalUser, *"
   default     = []
 }

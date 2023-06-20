@@ -3,12 +3,14 @@ data "aws_iam_policy_document" "this" {
   version = "2012-10-17"
   dynamic "statement" {
     for_each = var.policy_statements
+    iterator = "statement"
     content {
-      effect    = policy_statement.value.allow ? "Allow" : "Deny"
-      actions   = policy_statement.value.actions
-      resources = [for path in toset(policy_statement.value.resource_paths) : "${aws_s3_bucket.this.arn}/${path}"]
+      effect    = statement.allow ? "Allow" : "Deny"
+      actions   = statement.value.actions
+      resources = [for path in toset(statement.value.resource_paths) : "${aws_s3_bucket.this.arn}/${path}"]
       dynamic "principals" {
-        for_each = policy_statement.principals
+        for_each = statement.principals
+        iterator = "principal"
         content {
           type        = principal.key
           identifiers = principal.value
