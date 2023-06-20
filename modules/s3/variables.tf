@@ -21,21 +21,18 @@ variable "version_status" {
 }
 
 variable "attach_policy" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "policy_statements" {
   type = list(object({
-    allow                    = bool
-    actions                  = list(string)
-    resource_paths           = list(string)
-    all_principals           = bool
-    aws_principals           = list(string)
-    service_principals       = list(string)
-    federated_principals     = list(string)
-    canonicaluser_principals = list(string)
+    allow          = bool
+    actions        = list(string)
+    resource_paths = list(string)
+    principals     = map(set(string))
   }))
 
-  default = []
+  description = "principals key is one of AWS, Service, Federated, CanonicalUser, *"
+  default     = []
 }
