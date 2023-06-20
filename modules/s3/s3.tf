@@ -27,8 +27,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket                  = aws_s3_bucket.this.id
   block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = contains(var.policy_statements[*].actions, "s3:PutObject")
+  ignore_public_acls      = true
+  block_public_policy     = contains(var.policy_statements[*].actions, "s3:PutObject")
   restrict_public_buckets = !var.attach_policy
 
   depends_on = [aws_s3_bucket.this]
