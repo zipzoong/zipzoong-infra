@@ -7,16 +7,16 @@ module "s3_public" {
     allow          = true
     actions        = ["s3:GetObject"]
     resource_paths = ["*"]
-    principals = [{
+    principals = {
       "*" = ["*"]
-    }]
+    }
     }, {
     allow          = true
     actions        = ["s3:PutObject"]
     resource_paths = ["*"]
-    principals = [{
+    principals = {
       "AWS" = [data.aws_iam_role.backend_main.arn]
-    }]
+    }
   }]
 }
 
@@ -29,9 +29,9 @@ module "s3_private" {
     allow          = true
     actions        = ["s3:PutObject", "s3:GetObject"]
     resource_paths = ["*"]
-    principals = [{
+    principals = {
       "AWS" = [data.aws_iam_role.backend_main.arn]
-    }]
+    }
   }]
 }
 
