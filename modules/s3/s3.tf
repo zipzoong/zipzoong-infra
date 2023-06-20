@@ -42,7 +42,7 @@ resource "aws_s3_bucket_policy" "this" {
   # Ref: https://github.com/hashicorp/terraform-provider-aws/issues/7628
 
   bucket = aws_s3_bucket.this.id
-  policy = data.aws_iam_policy_document.this.json
+  policy = data.aws_iam_policy_document.this[0].json
 
   depends_on = [aws_s3_bucket_public_access_block.this]
 }
