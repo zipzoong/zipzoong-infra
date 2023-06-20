@@ -8,7 +8,6 @@ resource "aws_s3_bucket" "this" {
   object_lock_enabled = var.read-only
 }
 
-
 resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
   versioning_configuration {
@@ -43,7 +42,7 @@ resource "aws_s3_bucket_policy" "this" {
   # Ref: https://github.com/hashicorp/terraform-provider-aws/issues/7628
 
   bucket = aws_s3_bucket.this.id
-  policy = var.policy
+  policy = data.aws_iam_policy_document.this.json
 
   depends_on = [aws_s3_bucket_public_access_block.this]
 }
