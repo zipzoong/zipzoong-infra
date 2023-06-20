@@ -14,7 +14,7 @@ module "s3_public" {
             "Resource": "arn:aws:s3:::zipzoong-public/*"
         },{
             "Effect": "Allow",
-            "Principal": [${data.backend_main.arn}],
+            "Principal": [${data.aws_iam_role.backend_main.arn}],
             "Action": "s3:PutObject",
             "Resource": "arn:aws:s3:::zipzoong-public/*"
         }
