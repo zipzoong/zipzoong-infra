@@ -19,7 +19,7 @@ module "s3_public" {
             "Resource": "arn:aws:s3:::zipzoong-public/*"
         }
     ]
-}
+  }
   EOT
 }
 
