@@ -20,6 +20,11 @@ variable "version_status" {
   default = "Disabled"
 }
 
+variable "attach_policy" {
+  type = bool
+  default = false
+}
+
 variable "policy_statements" {
   type = list(object({
     allow                    = bool
