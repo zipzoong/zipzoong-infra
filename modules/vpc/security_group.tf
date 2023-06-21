@@ -99,7 +99,7 @@ resource "aws_security_group" "allow_pg" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "all"
+    protocol    = "-1"
     cidr_blocks = [local.public_cidr]
   }
 }

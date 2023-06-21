@@ -21,7 +21,7 @@ resource "aws_default_network_acl" "default" {
   ingress {
     from_port  = 0
     to_port    = 0
-    protocol   = "all"
+    protocol   = "-1"
     rule_no    = 100
     action     = "allow"
     cidr_block = local.public_cidr
@@ -30,7 +30,7 @@ resource "aws_default_network_acl" "default" {
   egress {
     from_port  = 0
     to_port    = 0
-    protocol   = "all"
+    protocol   = "-1"
     rule_no    = 100
     action     = "allow"
     cidr_block = local.public_cidr
@@ -86,6 +86,8 @@ resource "aws_default_route_table" "default" {
   }
 
   default_route_table_id = aws_vpc.this.default_route_table_id
+  propagating_vgws       = []
+  depends_on             = [aws_subnet.public_a, aws_subnet.public_b, aws_subnet.private_a, aws_subnet.private_b]
 }
 
 resource "aws_route_table" "public" {
@@ -99,7 +101,6 @@ resource "aws_route_table" "public" {
     cidr_block = local.public_cidr
     gateway_id = aws_internet_gateway.igw.id
   }
-
 }
 
 resource "aws_route_table" "private" {
@@ -110,8 +111,8 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
 
   route {
-    cidr_block = local.public_cidr
-    gateway_id = aws_nat_gateway.this.id
+    cidr_block     = local.public_cidr
+    nat_gateway_id = aws_nat_gateway.this.id
   }
 }
 
