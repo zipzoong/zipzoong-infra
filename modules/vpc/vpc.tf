@@ -22,7 +22,7 @@ resource "aws_default_network_acl" "default" {
     action          = "allow"
     cidr_block      = local.public_cidr
     from_port       = 0
-    ipv6_cidr_block = ""
+    ipv6_cidr_block = null
     protocol        = "-1"
     rule_no         = 100
     to_port         = 0
@@ -34,7 +34,7 @@ resource "aws_default_network_acl" "default" {
     from_port       = 0
     icmp_code       = 0
     icmp_type       = 0
-    ipv6_cidr_block = ""
+    ipv6_cidr_block = null
     protocol        = "-1"
     rule_no         = 100
     to_port         = 0
