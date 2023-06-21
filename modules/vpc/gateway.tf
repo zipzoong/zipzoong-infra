@@ -3,7 +3,7 @@ resource "aws_eip" "nat" {
     Name = "${var.project}-eip-nat-a"
   }
   domain     = "vpc"
-  depends_on = [aws_vpc.this]
+  depends_on = [aws_internet_gateway.igw]
 }
 
 resource "aws_nat_gateway" "this" {
@@ -13,5 +13,5 @@ resource "aws_nat_gateway" "this" {
   subnet_id         = aws_subnet.public_a.id
   connectivity_type = "public"
   allocation_id     = aws_eip.nat.id
-  depends_on        = [aws_eip.nat]
+  depends_on        = [aws_internet_gateway.igw]
 }

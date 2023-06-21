@@ -19,21 +19,25 @@ resource "aws_default_network_acl" "default" {
   default_network_acl_id = aws_vpc.this.default_network_acl_id
 
   ingress {
-    from_port  = 0
-    to_port    = 0
-    protocol   = "-1"
-    rule_no    = 100
-    action     = "allow"
-    cidr_block = local.public_cidr
+    action          = "allow"
+    cidr_block      = local.public_cidr
+    from_port       = 0
+    ipv6_cidr_block = ""
+    protocol        = "-1"
+    rule_no         = 100
+    to_port         = 0
   }
 
   egress {
-    from_port  = 0
-    to_port    = 0
-    protocol   = "-1"
-    rule_no    = 100
-    action     = "allow"
-    cidr_block = local.public_cidr
+    action          = "allow"
+    cidr_block      = local.public_cidr
+    from_port       = 0
+    icmp_code       = 0
+    icmp_type       = 0
+    ipv6_cidr_block = ""
+    protocol        = "-1"
+    rule_no         = 100
+    to_port         = 0
   }
 
   lifecycle {
@@ -114,7 +118,6 @@ resource "aws_default_route_table" "default" {
   }
 
   default_route_table_id = aws_vpc.this.default_route_table_id
-  propagating_vgws       = []
 }
 
 resource "aws_route_table" "public" {
