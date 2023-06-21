@@ -4,6 +4,7 @@ resource "aws_default_security_group" "default" {
   }
   vpc_id = aws_vpc.this.id
 }
+
 resource "aws_security_group" "allow_http" {
   tags = {
     Name = "${var.project}-sg-http"
@@ -68,6 +69,29 @@ resource "aws_security_group" "allow_4000" {
   ingress {
     from_port   = 4000
     to_port     = 4000
+    protocol    = "tcp"
+    cidr_blocks = [local.public_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = [local.public_cidr]
+  }
+}
+
+resource "aws_security_group" "allow_pg" {
+  tags = {
+    Name = "${var.project}-sg-pg"
+  }
+  name        = "allow_pg"
+  description = "allow pg inbound traffic"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = [local.public_cidr]
   }
