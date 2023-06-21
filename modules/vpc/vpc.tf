@@ -45,36 +45,60 @@ resource "aws_subnet" "public_a" {
   tags = {
     Name = "${var.project}-public-subnet-a"
   }
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.0.0/20"
-  availability_zone = "${var.region}a"
+  vpc_id                                         = aws_vpc.this.id
+  assign_ipv6_address_on_creation                = false
+  availability_zone                              = "${var.region}a"
+  cidr_block                                     = "10.0.0.0/20"
+  enable_dns64                                   = false
+  enable_resource_name_dns_a_record_on_launch    = false
+  enable_resource_name_dns_aaaa_record_on_launch = false
+  ipv6_native                                    = false
+  map_public_ip_on_launch                        = false
 }
 
 resource "aws_subnet" "public_b" {
   tags = {
     Name = "${var.project}-public-subnet-b"
   }
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.16.0/20"
-  availability_zone = "${var.region}b"
+  vpc_id                                         = aws_vpc.this.id
+  assign_ipv6_address_on_creation                = false
+  availability_zone                              = "${var.region}b"
+  cidr_block                                     = "10.0.16.0/20"
+  enable_dns64                                   = false
+  enable_resource_name_dns_a_record_on_launch    = false
+  enable_resource_name_dns_aaaa_record_on_launch = false
+  ipv6_native                                    = false
+  map_public_ip_on_launch                        = false
 }
 
 resource "aws_subnet" "private_a" {
   tags = {
     Name = "${var.project}-private-subnet-a"
   }
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.128.0/20"
-  availability_zone = "${var.region}a"
+  vpc_id                                         = aws_vpc.this.id
+  assign_ipv6_address_on_creation                = false
+  availability_zone                              = "${var.region}a"
+  cidr_block                                     = "10.0.128.0/20"
+  enable_dns64                                   = false
+  enable_resource_name_dns_a_record_on_launch    = false
+  enable_resource_name_dns_aaaa_record_on_launch = false
+  ipv6_native                                    = false
+  map_public_ip_on_launch                        = false
 }
 
 resource "aws_subnet" "private_b" {
   tags = {
     Name = "${var.project}-private-subnet-b"
   }
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.144.0/20"
-  availability_zone = "${var.region}b"
+  vpc_id                                         = aws_vpc.this.id
+  assign_ipv6_address_on_creation                = false
+  availability_zone                              = "${var.region}b"
+  cidr_block                                     = "10.0.144.0/20"
+  enable_dns64                                   = false
+  enable_resource_name_dns_a_record_on_launch    = false
+  enable_resource_name_dns_aaaa_record_on_launch = false
+  ipv6_native                                    = false
+  map_public_ip_on_launch                        = false
 }
 
 resource "aws_internet_gateway" "igw" {

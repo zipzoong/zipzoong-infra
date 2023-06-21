@@ -1,4 +1,3 @@
-
 resource "aws_eip" "nat" {
   tags = {
     Name = "${var.project}-eip-nat-a"

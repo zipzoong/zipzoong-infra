@@ -2,7 +2,8 @@ resource "aws_default_security_group" "default" {
   tags = {
     Name = "${var.project}-sg-default"
   }
-  vpc_id = aws_vpc.this.id
+  vpc_id                 = aws_vpc.this.id
+  revoke_rules_on_delete = false
 }
 
 resource "aws_security_group" "allow_http" {
