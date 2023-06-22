@@ -13,25 +13,7 @@ resource "aws_db_instance" "this" {
   master_user_secret_kms_key_id = data.aws_kms_key.this.key_id
 }
 
-resource "aws_security_group" "this" {
-  tags = {
-    Name = "${var.service}-sg-postgresql"
-  }
-  name        = "allow_ssh"
-  description = "allow ssh inbound traffic"
-  vpc_id      = aws_vpc.this.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "all"
-    cidr_blocks = [local.public_cidr]
-  }
+resource "aws_db_subnet_group" "this" {
+  name       = "${var.service}-${var.db_name}"
+  subnet_ids = data.aws_subnets.this.ids
 }

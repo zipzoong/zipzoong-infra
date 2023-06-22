@@ -6,6 +6,16 @@ data "aws_security_group" "this" {
   vpc_id = data.aws_vpc.this.id
 }
 
+data "aws_subnets" "this" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+  tags = {
+    Name = "${var.service}-private-subnet"
+  }
+}
+
 data "aws_kms_key" "this" {
   key_id = "alias/${var.kms_key}"
 }
