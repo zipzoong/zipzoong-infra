@@ -41,6 +41,7 @@ resource "aws_db_instance" "this" {
 
   enabled_cloudwatch_logs_exports       = ["postgresql", "upgrade"]
   monitoring_interval                   = var.enhanced_monitoring_interval
+  monitoring_role_arn                   = var.enhanced_monitoring_interval > 0 ? data.aws_iam_role.monitoring.arn : null
   performance_insights_enabled          = var.insight_period > 0 ? true : false
   performance_insights_kms_key_id       = var.insight_period > 0 ? data.aws_kms_key.this.arn : null
   performance_insights_retention_period = var.insight_period

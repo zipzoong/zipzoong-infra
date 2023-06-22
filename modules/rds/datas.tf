@@ -27,3 +27,7 @@ data "aws_subnets" "this" {
     Name = "${var.service}-private-subnet"
   }
 }
+
+data "aws_iam_role" "monitoring" {
+  name = "rds-monitoring-role"
+}
