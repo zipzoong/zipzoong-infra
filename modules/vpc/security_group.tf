@@ -6,96 +6,14 @@ resource "aws_default_security_group" "default" {
   revoke_rules_on_delete = false
 }
 
-resource "aws_security_group" "allow_http" {
+resource "aws_security_group" "this" {
+  count = length(var.sg)
   tags = {
-    Name = "${var.project}-sg-http"
+    Name = join("-", [var.project, "sg", element(var.sg[*].name, count.index)])
   }
-  name        = "allow_http"
-  description = "allow http(s) inbound traffic"
   vpc_id      = aws_vpc.this.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "all"
-    cidr_blocks = [local.public_cidr]
-  }
-}
-
-resource "aws_security_group" "allow_ssh" {
-  tags = {
-    Name = "${var.project}-sg-ssh"
-  }
-  name        = "allow_ssh"
-  description = "allow ssh inbound traffic"
-  vpc_id      = aws_vpc.this.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "all"
-    cidr_blocks = [local.public_cidr]
-  }
-}
-
-resource "aws_security_group" "allow_4000" {
-  tags = {
-    Name = "${var.project}-sg-4000"
-  }
-  name        = "allow_4000"
-  description = "allow 4000 inbound traffic"
-  vpc_id      = aws_vpc.this.id
-
-  ingress {
-    from_port   = 4000
-    to_port     = 4000
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "all"
-    cidr_blocks = [local.public_cidr]
-  }
-}
-
-resource "aws_security_group" "allow_pg" {
-  tags = {
-    Name = "${var.project}-sg-pg"
-  }
-  name        = "allow_pg"
-  description = "allow pg inbound traffic"
-  vpc_id      = aws_vpc.this.id
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = [local.public_cidr]
-  }
+  name        = element(var.sg[*].name, count.index)
+  description = "allow ${element(var.sg[*].name, count.index)} inbound traffic"
 
   egress {
     from_port   = 0
@@ -103,4 +21,16 @@ resource "aws_security_group" "allow_pg" {
     protocol    = "-1"
     cidr_blocks = [local.public_cidr]
   }
+
+  dynamic "ingress" {
+    for_each = element(var.sg[*].inbound, count.index)
+
+    content {
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      protocol    = ingress.value.protocol
+      cidr_blocks = [local.public_cidr]
+    }
+  }
 }
+
