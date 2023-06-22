@@ -1,5 +1,7 @@
 locals {
   public_cidr = "0.0.0.0/0"
+  azs         = ["a", "b", "c", "d"]
+  len_of_az   = min(var.public_subnets, var.private_subnets, length(azs))
 }
 
 resource "aws_vpc" "this" {
@@ -49,10 +51,11 @@ resource "aws_subnet" "public" {
   tags = {
     Name = "${var.project}-public-subnet"
   }
-  count                                          = length(var.azs)
+  count                                          = local.len_of_az
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  availability_zone                              = element([for az in var.azs : "${var.region}${az}"], count.index)
+  cidr_block                                     = element(local.public_subnets, count.index)
+  availability_zone                              = element([for az in local.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
   enable_resource_name_dns_aaaa_record_on_launch = false
@@ -64,10 +67,11 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "${var.project}-private-subnet"
   }
-  count                                          = length(var.azs)
+  count                                          = local.len_of_az
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  availability_zone                              = element([for az in var.azs : "${var.region}${az}"], count.index)
+  cidr_block                                     = element(local.private_subnets, count.index)
+  availability_zone                              = element([for az in local.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
   enable_resource_name_dns_aaaa_record_on_launch = false
