@@ -10,7 +10,8 @@ module "vpc" {
       }, {
       port     = 443
       protocol = "tcp"
-    }] }, {
+    }]
+    }, {
     name = "ssh"
     inbound = [{
       port     = 22
@@ -23,9 +24,9 @@ module "vpc" {
       protocol = "tcp"
     }]
     }, {
-    name    = "postgres"
+    name = "postgres"
     inbound = [{
-      port = 5432
+      port     = 5432
       protocol = "tcp"
     }]
   }]

@@ -21,7 +21,7 @@ variable "sg" {
     name = string
     inbound = list(object({
       port     = number
-      protocol = number
+      protocol = string
     }))
   }))
 
