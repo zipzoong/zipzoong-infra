@@ -1,7 +1,7 @@
 locals {
   public_cidr = "0.0.0.0/0"
   azs         = ["a", "b", "c", "d"]
-  len_of_az   = min(var.public_subnets, var.private_subnets, length(azs))
+  len_of_az   = min(var.public_subnets, var.private_subnets, length(local.azs))
 }
 
 resource "aws_vpc" "this" {
