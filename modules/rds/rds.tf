@@ -2,7 +2,7 @@ resource "aws_db_instance" "this" {
   tags = {
     Name = "${var.service}-db-${var.name}"
   }
-  engine                      = "postgresql"
+  engine                      = "postgres"
   engine_version              = "14"
   instance_class              = var.instance_class //"db.m5.large"
   allow_major_version_upgrade = var.auto_upgrade.major
