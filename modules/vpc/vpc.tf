@@ -6,7 +6,6 @@ resource "aws_vpc" "this" {
   tags = {
     Name = "${var.project}-vpc"
   }
-  cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -45,14 +44,14 @@ resource "aws_default_network_acl" "default" {
   }
 }
 
-resource "aws_subnet" "public_a" {
+resource "aws_subnet" "public" {
   tags = {
-    Name = "${var.project}-public-subnet-a"
+    Name = "${var.project}-public-subnet"
   }
+  count                                          = length(var.azs)
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  availability_zone                              = "${var.region}a"
-  cidr_block                                     = "10.0.0.0/20"
+  availability_zone                              = element([for az in var.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
   enable_resource_name_dns_aaaa_record_on_launch = false
@@ -60,44 +59,14 @@ resource "aws_subnet" "public_a" {
   map_public_ip_on_launch                        = false
 }
 
-resource "aws_subnet" "public_b" {
+resource "aws_subnet" "private" {
   tags = {
-    Name = "${var.project}-public-subnet-b"
+    Name = "${var.project}-private-subnet"
   }
+  count                                          = length(var.azs)
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  availability_zone                              = "${var.region}b"
-  cidr_block                                     = "10.0.16.0/20"
-  enable_dns64                                   = false
-  enable_resource_name_dns_a_record_on_launch    = false
-  enable_resource_name_dns_aaaa_record_on_launch = false
-  ipv6_native                                    = false
-  map_public_ip_on_launch                        = false
-}
-
-resource "aws_subnet" "private_a" {
-  tags = {
-    Name = "${var.project}-private-subnet-a"
-  }
-  vpc_id                                         = aws_vpc.this.id
-  assign_ipv6_address_on_creation                = false
-  availability_zone                              = "${var.region}a"
-  cidr_block                                     = "10.0.128.0/20"
-  enable_dns64                                   = false
-  enable_resource_name_dns_a_record_on_launch    = false
-  enable_resource_name_dns_aaaa_record_on_launch = false
-  ipv6_native                                    = false
-  map_public_ip_on_launch                        = false
-}
-
-resource "aws_subnet" "private_b" {
-  tags = {
-    Name = "${var.project}-private-subnet-b"
-  }
-  vpc_id                                         = aws_vpc.this.id
-  assign_ipv6_address_on_creation                = false
-  availability_zone                              = "${var.region}b"
-  cidr_block                                     = "10.0.144.0/20"
+  availability_zone                              = element([for az in var.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
   enable_resource_name_dns_aaaa_record_on_launch = false
@@ -146,22 +115,14 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route_table_association" "public_a" {
-  subnet_id      = aws_subnet.public_a.id
+resource "aws_route_table_association" "public" {
+  count          = length(aws_subnet.public)
+  subnet_id      = element(aws_subnet.public[*].id, count.index)
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "public_b" {
-  subnet_id      = aws_subnet.public_b.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "private_a" {
-  subnet_id      = aws_subnet.private_a.id
-  route_table_id = aws_route_table.private.id
-}
-
-resource "aws_route_table_association" "private_b" {
-  subnet_id      = aws_subnet.private_b.id
+resource "aws_route_table_association" "private" {
+  count          = length(aws_subnet.private)
+  subnet_id      = element(aws_subnet.private[*].id, count.index)
   route_table_id = aws_route_table.private.id
 }
