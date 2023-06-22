@@ -54,7 +54,7 @@ resource "aws_subnet" "public" {
   count                                          = local.len_of_az
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  cidr_block                                     = element(var.public_subnets, count.index)
+  cidr_block                                     = element(tolist(var.public_subnets), count.index)
   availability_zone                              = element([for az in local.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
@@ -70,7 +70,7 @@ resource "aws_subnet" "private" {
   count                                          = local.len_of_az
   vpc_id                                         = aws_vpc.this.id
   assign_ipv6_address_on_creation                = false
-  cidr_block                                     = element(var.private_subnets, count.index)
+  cidr_block                                     = element(tolist(var.private_subnets), count.index)
   availability_zone                              = element([for az in local.azs : "${var.region}${az}"], count.index)
   enable_dns64                                   = false
   enable_resource_name_dns_a_record_on_launch    = false
