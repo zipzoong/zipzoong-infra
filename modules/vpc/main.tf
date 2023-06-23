@@ -121,14 +121,14 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "public" {
-  count          = length(aws_subnet.public)
-  subnet_id      = element(aws_subnet.public[*].id, count.index)
+  for_each       = toset(aws_subnet.public)
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
-  count          = length(aws_subnet.private)
-  subnet_id      = element(aws_subnet.private[*].id, count.index)
+  for_each       = toset(aws_subnet.private)
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
 
@@ -141,13 +141,13 @@ resource "aws_default_security_group" "default" {
 }
 
 resource "aws_security_group" "this" {
-  count = length(var.sg)
+  for_each = toset(var.sg)
   tags = {
-    Name = join("-", [var.project, "sg", element(var.sg[*].name, count.index)])
+    Name = join("-", [var.project, "sg", each.value.name])
   }
   vpc_id      = aws_vpc.this.id
-  name        = element(var.sg[*].name, count.index)
-  description = "allow ${element(var.sg[*].name, count.index)} inbound traffic"
+  name        = each.value.name
+  description = "allow ${each.value.name} inbound traffic"
 
   egress {
     from_port   = 0
@@ -157,7 +157,7 @@ resource "aws_security_group" "this" {
   }
 
   dynamic "ingress" {
-    for_each = element(var.sg[*].inbound, count.index)
+    for_each = each.value.inbound
 
     content {
       from_port   = ingress.value.port

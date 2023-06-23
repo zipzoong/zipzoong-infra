@@ -4,14 +4,14 @@ data "aws_route53_zone" "this" {
 }
 
 resource "aws_route53_record" "this" {
-  count   = length(var.records)
-  zone_id = data.aws_route53_zone.this.zone_id
-  name    = join(".", [element(var.records[*].subdomain, count.index), data.aws_route53_zone.this.name])
-  type    = "A"
+  for_each = toset(var.records)
+  zone_id  = data.aws_route53_zone.this.zone_id
+  name     = join(".", [each.value.subdomain, data.aws_route53_zone.this.name])
+  type     = "A"
 
   alias {
-    name                   = element(var.records[*].alias.dns_name, count.index)
-    zone_id                = element(var.records[*].alias.zone_id, count.index)
+    name                   = each.value.alias.dns_name
+    zone_id                = each.value.alias.zone_id
     evaluate_target_health = true
   }
 
