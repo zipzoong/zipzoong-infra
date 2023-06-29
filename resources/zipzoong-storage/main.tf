@@ -12,7 +12,7 @@ module "service" {
     }, {
     allow          = true
     actions        = ["s3:GetObject"]
-    resource_paths = ["arn:aws:s3:::${local.service}/private/*"]
+    resource_paths = ["*"]
     principals = {
       "AWS" = [data.aws_iam_role.backend_main.arn]
     }
