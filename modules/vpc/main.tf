@@ -121,8 +121,8 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = aws_subnet.public
-  subnet_id      = each.value.id
+  count          = length(aws_subnet.public)
+  subnet_id      = element(aws_subnet.public, count.index)
   route_table_id = aws_route_table.public.id
 }
 
