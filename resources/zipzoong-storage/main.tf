@@ -5,7 +5,7 @@ module "service" {
   policy_statements = [{
     allow          = true
     actions        = ["s3:GetObject"]
-    resource_paths = ["arn:aws:s3:::${local.service}/public/*"]
+    resource_paths = ["public/*"]
     principals = {
       "*" = ["*"]
     }
