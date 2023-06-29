@@ -121,13 +121,13 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = toset(aws_subnet.public)
+  for_each       = aws_subnet.public
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
-  for_each       = toset(aws_subnet.private)
+  for_each       = aws_subnet.private
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
@@ -141,7 +141,7 @@ resource "aws_default_security_group" "default" {
 }
 
 resource "aws_security_group" "this" {
-  for_each = toset(var.sg)
+  for_each = var.sg
   tags = {
     Name = join("-", [var.project, "sg", each.value.name])
   }
