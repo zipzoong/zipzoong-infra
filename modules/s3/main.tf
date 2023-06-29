@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "this" {
   tags = {
     Name = join("-", [var.service, "s3"])
   }
-  bucket              = var.service
+  bucket              = coalesce(var.name, var.service)
   force_destroy       = false
   object_lock_enabled = var.read-only
 }

@@ -2,6 +2,11 @@ variable "service" {
   type = string
 }
 
+variable "name" {
+  type    = string
+  default = null
+}
+
 variable "read-only" {
   type    = bool
   default = false
