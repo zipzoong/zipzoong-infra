@@ -13,7 +13,7 @@ terraform {
   backend "remote" {
     organization = local.service
     workspaces {
-      name = "${local.service}-domain"
+      name = "${local.service}-ecs"
     }
   }
 }
@@ -22,7 +22,7 @@ provider "aws" {
   region = local.region
   assume_role {
     role_arn     = var.assume_role_arn
-    session_name = "terraform-domain"
+    session_name = "terraform-ecs"
   }
 }
 
