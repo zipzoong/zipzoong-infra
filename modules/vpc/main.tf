@@ -141,13 +141,13 @@ resource "aws_default_security_group" "default" {
 }
 
 resource "aws_security_group" "this" {
-  for_each = toset(var.sg)
+  count = length(var.sg)
   tags = {
-    Name = join("-", [var.project, "sg", each.value.name])
+    Name = join("-", [var.project, "sg", element(var.sg[*].name, count.index)])
   }
   vpc_id      = aws_vpc.this.id
-  name        = each.value.name
-  description = "allow ${each.value.name} inbound traffic"
+  name        = element(var.sg[*].name, count.index)
+  description = "allow ${element(var.sg[*].name, count.index)} inbound traffic"
 
   egress {
     from_port   = 0
@@ -157,7 +157,7 @@ resource "aws_security_group" "this" {
   }
 
   dynamic "ingress" {
-    for_each = each.value.inbound
+    for_each = element(var.sg[*].inbound, count.index)
 
     content {
       from_port   = ingress.value.port
