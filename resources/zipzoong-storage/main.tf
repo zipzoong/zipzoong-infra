@@ -1,14 +1,20 @@
-module "s3_public" {
+module "service" {
   source        = "../../modules/s3"
   service       = local.service
-  name          = "public"
   attach_policy = true
   policy_statements = [{
     allow          = true
     actions        = ["s3:GetObject"]
-    resource_paths = ["*"]
+    resource_paths = ["arn:aws:s3:::${local.service}/public/*"]
     principals = {
       "*" = ["*"]
+    }
+    }, {
+    allow          = true
+    actions        = ["s3:GetObject"]
+    resource_paths = ["arn:aws:s3:::${local.service}/private/*"]
+    principals = {
+      "AWS" = [data.aws_iam_role.backend_main.arn]
     }
     }, {
     allow          = true
@@ -20,22 +26,7 @@ module "s3_public" {
   }]
 }
 
-module "s3_private" {
-  source        = "../../modules/s3"
-  service       = local.service
-  name          = "private"
-  attach_policy = true
-  policy_statements = [{
-    allow          = true
-    actions        = ["s3:PutObject", "s3:GetObject"]
-    resource_paths = ["*"]
-    principals = {
-      "AWS" = [data.aws_iam_role.backend_main.arn]
-    }
-  }]
-}
-
-module "s3_internal" {
+module "internal" {
   source  = "../../modules/s3"
   service = local.service
   name    = "internal"

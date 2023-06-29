@@ -1,9 +1,8 @@
 resource "aws_s3_bucket" "this" {
   tags = {
-    Name = "${var.service}-s3-${var.name}"
+    Name = join("-", [var.service, "s3"])
   }
-
-  bucket              = "${var.service}-${var.name}"
+  bucket              = var.service
   force_destroy       = false
   object_lock_enabled = var.read-only
 }
